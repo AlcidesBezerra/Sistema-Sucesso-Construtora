@@ -120,6 +120,10 @@
                     </p:confirmDialog>             
                 </p:column>
             </p:dataTable>
+            <h:commandLink>
+                <img src="../resources/images/pdf.png" alt=""/>
+                <p:dataExporter type="pdf" target="tblProdutos" fileName="Relatorio"  options="#{operacoesAlmoxarifeBean.pdfOpt}" preProcessor="#{operacoesAlmoxarifeBean.preProcessPDF}"/>
+            </h:commandLink>
         </h:form>
         <!-- FIM DA TABELA DE RELATORIO -->
 

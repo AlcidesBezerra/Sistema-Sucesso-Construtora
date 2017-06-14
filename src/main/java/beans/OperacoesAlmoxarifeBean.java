@@ -5,6 +5,10 @@
  */
 package beans;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.PageSize;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -16,6 +20,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.primefaces.component.export.PDFOptions;
 import org.primefaces.event.RowEditEvent;
 import pojos.OperacoesAlmoxarife;
 import pojos.Produtos;
@@ -33,10 +38,13 @@ public class OperacoesAlmoxarifeBean {
     private Session ses;
     private List<OperacoesAlmoxarife> list;
     
+    private PDFOptions pdfOpt;
+    
     
     @PostConstruct
     public void init() {
         gerarListaAlmoxarife();
+        customizationOptions();
         atualizarLista();
     }
     
@@ -85,8 +93,38 @@ public class OperacoesAlmoxarifeBean {
 
     }
     
+    public void preProcessPDF(Object document) throws IOException, DocumentException {
+        Document pdf = (Document) document;
+
+        pdf.setPageSize(PageSize.A4);
+        pdf.setMargins(-50, -50, 25, 25);
+        pdf.open();
+
+    }
+    
+    public void customizationOptions() {
+
+        pdfOpt = new PDFOptions();
+        pdfOpt.setFacetFontColor("#0000ff");
+        pdfOpt.setFacetFontStyle("BOLD");
+        pdfOpt.setFacetFontSize("11");
+        pdfOpt.setCellFontSize("12");
+    }
+    
     
     public OperacoesAlmoxarifeBean() {
+        pdfOpt = new PDFOptions();
+        customizationOptions();
     }
+
+    public PDFOptions getPdfOpt() {
+        return pdfOpt;
+    }
+
+    public void setPdfOpt(PDFOptions pdfOpt) {
+        this.pdfOpt = pdfOpt;
+    }
+    
+    
     
 }
