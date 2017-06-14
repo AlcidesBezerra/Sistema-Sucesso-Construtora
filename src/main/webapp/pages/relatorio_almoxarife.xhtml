@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/templates/modeloSistema.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="menu">
+
+        <ui:include src="/includes/menu.xhtml" />
+
+    </ui:define>
+
+    <ui:define name="conteudo">    
+
+       
+
+        
+
+
+
+
+        <h:form id="formTabelaRelatorioAlmoxarife">
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"  />
+
+            <p:dataTable var="tabelaOperacoes" value="#{operacoesAlmoxarifeBean.gerarListaAlmoxarife()}" id="tblProdutos" style="center" paginator="true" rows="20" editable="true"  >
+                <p:ajax event="rowEdit" listener="#{operacoesAlmoxarifeBean.onRowEdit}" />
+
+
+                <p:column filterBy="#{tabelaOperacoes.data}" headerText="Data"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaOperacoes.data}">
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy HH:mm:ss"/>
+                            </h:outputText>
+                        </f:facet>
+                        <f:facet name="input" id="editData">
+                            <p:calendar  value="#{tabelaOperacoes.data}" style="width:100%" pattern="dd/MM/yyyy HH:mm:ss"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{tabelaOperacoes.produto}" headerText="Produto"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaOperacoes.produto}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText id="editProduto" value="#{tabelaOperacoes.produto}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                
+                <p:column filterBy="#{tabelaOperacoes.quantidadeAnterior}" headerText="Quantidade Anterior"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaOperacoes.quantidadeAnterior}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaOperacoes.quantidadeAnterior}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                
+                <p:column filterBy="#{tabelaOperacoes.saida}" headerText="Saida"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaOperacoes.saida}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaOperacoes.saida}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                
+                <p:column filterBy="#{tabelaOperacoes.entrada}" headerText="Entrada"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaOperacoes.entrada}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaOperacoes.entrada}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                
+                <p:column filterBy="#{tabelaOperacoes.quantidadeAtual}" headerText="Quantidade Atual"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaOperacoes.quantidadeAtual}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaOperacoes.quantidadeAtual}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{tabelaOperacoes.fornecedor}" headerText="Fornecedor"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaOperacoes.fornecedor}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaOperacoes.fornecedor}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column  exportable="false" width="20">       
+                    <p:rowEditor  editTitle="Editar" cancelTitle="Cancelar" saveTitle="Salvar" />
+                </p:column>
+                <p:column exportable="false" width="25">
+
+                    <p:commandButton style="width:30px;height: 30px;" value="" icon="ui-icon-trash" action="#{operacoesAlmoxarifeBean.excluirProduto(tabelaOperacoes)}" update="@form" ajax="true" process="@this">
+                        <p:confirm header="Confirmacao" message="Tem certeza? Esta operacao nao pode ser desfeita" icon="ui-icon-alert"  />
+                    </p:commandButton>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="Nao" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>             
+                </p:column>
+            </p:dataTable>
+        </h:form>
+        <!-- FIM DA TABELA DE RELATORIO -->
+
+    </ui:define>
+
+    <ui:define name="left">
+         <p:commandButton action="almoxarife.xhtml?faces-redirect=true" value="Voltar" style="width:200px;"/>
+        
+    </ui:define>
+
+
+</ui:composition>
+

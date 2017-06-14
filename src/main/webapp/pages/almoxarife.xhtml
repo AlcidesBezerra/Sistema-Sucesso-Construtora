@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/templates/modeloSistema.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="menu">
+
+        <ui:include src="/includes/menu.xhtml" />
+
+    </ui:define>
+
+    <ui:define name="conteudo">    
+
+        <p:dialog header="Inserir novo produto" widgetVar="dlgInserirProduto" modal="true" appendTo="@(body)">
+
+            <p:panelGrid columns="2" >
+                <h:form>
+
+                    <p:messages id="mensagemInserirProduto" showDetail="true" autoUpdate="true" closable="true"  />
+                    <p:panelGrid columns="2">
+                        <h:outputText value="Nome do produto: " />
+                        <h:inputText id="placaVeiculo" value="#{produtosBean.novoProduto.nomeProduto}" />
+                        <h:outputText value="Quantidade Atual " />
+                        <h:inputText id="modeloVeiculo" value="#{produtosBean.novoProduto.quantidadeProduto}" />
+                        <h:outputText value="   " />
+                        <p:commandButton value="Cadastrar!" action="#{produtosBean.inserirNovoProduto(produtosBean.novoProduto)}" ajax="true" oncomplete="setTimeout(function(){$('[id$=mensagemInserirProduto]').fadeOut()},'2500'), setTimeout(function(){$('[id$=messages]').fadeOut()},'0')" />
+                    </p:panelGrid>
+                </h:form>
+            </p:panelGrid>
+        </p:dialog>
+
+        <p:dialog header="Dar entrada" widgetVar="dlgEntradaProduto" modal="true" appendTo="@(body)">
+
+            <p:panelGrid columns="2" >
+                <h:form>
+
+                    <p:messages id="mensagemEntradaProduto" showDetail="true" autoUpdate="true" closable="true"  />
+                    <p:panelGrid columns="2">
+                        <h:outputText value="Codigo " />
+                        <h:inputText id="idProduto" value="#{produtosBean.codigoEntrada}" />
+                        <h:outputText value="Data: " />
+                        <p:calendar id="event" pattern="dd/MM/yyyy HH:mm:ss">
+                            <p:ajax event="dateSelect" listener="#{produtosBean.onDateSelect}" />
+                        </p:calendar>
+                        <h:outputText value="Entrada:" />
+                        <h:inputText value="#{produtosBean.novaOperacaoAlmoxarife.entrada}" />
+                        <h:outputText value="Saida:" />
+                        <h:inputText  value="#{produtosBean.novaOperacaoAlmoxarife.saida}" />
+                        <h:outputText value="Fornecedor" />
+                        <h:inputText  value="#{produtosBean.novaOperacaoAlmoxarife.fornecedor}" />
+                        <h:outputText value="Nota:" />
+                        <h:inputText  value="#{produtosBean.novaOperacaoAlmoxarife.nota}" />
+                        <h:outputText value="Obs:" />
+                        <h:inputText  value="#{produtosBean.novaOperacaoAlmoxarife.destino}" />
+                        <h:outputText value="   " />
+                        <p:commandButton value="Inserir!" action="#{produtosBean.darEntrada()}" />
+                    </p:panelGrid>
+                </h:form>
+            </p:panelGrid>
+        </p:dialog>
+
+
+
+
+        <h:form id="formTabelaProdutos">
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"  />
+
+            <p:dataTable var="tabelaProdutos" value="#{produtosBean.gerarListaDeProdutos()}" id="tblProdutos" style="center" paginator="true" rows="20" editable="true"  >
+                <p:ajax event="rowEdit" listener="#{produtosBean.onRowEdit}" />
+
+
+                <p:column filterBy="#{tabelaProdutos.id}" headerText="Codigo"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaProdutos.id}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaProdutos.id}"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{tabelaProdutos.nomeProduto}" headerText="Produto"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaProdutos.nomeProduto}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaProdutos.nomeProduto}"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{tabelaProdutos.quantidadeProduto}" headerText="Quantidade"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaProdutos.quantidadeProduto}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaProdutos.quantidadeProduto}"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column  exportable="false" width="20">       
+                    <p:rowEditor  editTitle="Editar" cancelTitle="Cancelar" saveTitle="Salvar" />
+                </p:column>
+                <p:column exportable="false" width="25">
+
+                    <p:commandButton style="width:30px;height: 30px;" value="" icon="ui-icon-trash" action="#{produtosBean.excluirProduto(tabelaProdutos)}" update="@form" ajax="true" process="@this">
+                        <p:confirm header="Confirmacao" message="Tem certeza? Esta operacao nao pode ser desfeita" icon="ui-icon-alert"  />
+                    </p:commandButton>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="Nao" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>             
+                </p:column>
+            </p:dataTable>
+        </h:form>
+        <!-- FIM DA TABELA DE RELATORIO -->
+
+    </ui:define>
+
+    <ui:define name="left">
+        <p:commandButton value="Cadastrar Produto" onclick="PF('dlgInserirProduto').show();" style="width:200px;"/>
+        <p:commandButton value="Entrada/Saida" onclick="PF('dlgEntradaProduto').show();" style="width:200px;"/>
+        <p:commandButton action="relatorio_almoxarife.xhtml?faces-redirect=true" value="Relatorio" style="width:200px;"/>
+    </ui:define>
+
+
+</ui:composition>
+

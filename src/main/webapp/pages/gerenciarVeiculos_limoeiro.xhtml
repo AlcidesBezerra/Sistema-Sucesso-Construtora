@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"                
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/templates/modeloSistema.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="menu">
+
+        <ui:include src="/includes/menu.xhtml" />
+
+    </ui:define>
+
+
+
+
+
+    <ui:define name="conteudo">
+
+        <p:dialog header="Inserir novo veiculo" widgetVar="dlgInserirVeiculo" modal="true" appendTo="@(body)">
+            <p:panelGrid columns="2" >
+                <h:form>
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"  />
+                    <h:outputText value="Placa: " />
+                    <h:inputText id="placaVeiculo" value="#{veiculosLimoeiroBean.novoVeiculo.placa}" />
+                    <h:outputText value="Modelo: " />
+                    <h:inputText id="modeloVeiculo" value="#{veiculosLimoeiroBean.novoVeiculo.modelo}" />
+                    <h:outputText value="      " />
+
+                    <p:commandButton value="Cadastrar!" action="#{veiculosLimoeiroBean.inserirNovoVeiculo(veiculosLimoeiroBean.novoVeiculo)}" />
+                </h:form>
+            </p:panelGrid>
+        </p:dialog>
+
+        <p:dialog header="Veiculos" widgetVar="dlgListaVeiculos" modal="true" appendTo="@(body)">
+
+
+            <h:form>
+                      
+                    <p:dataTable var="tabelaVeiculos" value="#{veiculosLimoeiroBean.gerarListaVeiculos()}" >
+                        <p:growl id="growl" showDetail="true" sticky="true" />
+                        <p:column headerText="Placa" >
+                            <h:outputText value="#{tabelaVeiculos.placa}" />
+                        </p:column>
+                        <p:column headerText="Modelo" >
+                            <h:outputText value="#{tabelaVeiculos.modelo}" />
+                        </p:column>
+                        
+                        
+                        <p:column headerText="Opcoes" >
+                            
+                            <p:growl id="message" showDetail="true" />
+                            
+                            <p:commandButton value="Deletar" actionListener="#{veiculosLimoeiroBean.excluirVeiculo(tabelaVeiculos)}" update="message" immediate="true">
+                                <p:confirm header="Confirmacao" message="Tem certeza? Esta operacao nao pode ser desfeita" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                <p:commandButton value="Nao" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                            
+                        </p:column>
+                    </p:dataTable>
+            </h:form>
+
+        </p:dialog>
+
+
+
+        <!-- TABELA DE RELATORIO -->
+
+        <h:form id="formRelatorio">
+                <p:messages id="messages" globalOnly="true" showDetail="true" autoUpdate="true" closable="true"  />  
+                    <p:dataTable var="tabelaVeiculos" value="#{veiculosLimoeiroBean.gerarListaVeiculos()}" >
+                        <p:column headerText="Placa" >
+                            <h:outputText value="#{tabelaVeiculos.placa}" />
+                        </p:column>
+                        <p:column headerText="Modelo" >
+                            <h:outputText value="#{tabelaVeiculos.modelo}" />
+                        </p:column>
+                        
+                        
+                        <p:column headerText="Opcoes" >
+                            <p:commandButton value="Deletar" actionListener="#{veiculosLimoeiroBean.excluirVeiculo(tabelaVeiculos)}" update=":formRelatorio:messages" process="@all">
+                                <p:confirm header="Confirmacao" message="Tem certeza? Esta operacao nao pode ser desfeita" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                <p:commandButton value="Nao" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                            
+                        </p:column>
+                    </p:dataTable>
+            </h:form>
+
+
+        <!-- FIM DA TABELA DE RELATORIO -->
+
+
+
+
+
+
+    </ui:define>
+
+
+
+    <ui:define name="left">
+
+
+        <p:commandButton action="veiculos_limoeiro.xhtml?faces-redirect=true" value="Inicio / Relatorio" style="width:200px;"/>
+        <p:commandButton value="Cadastrar veiculo" onclick="PF('dlgInserirVeiculo').show();" style="width:200px;"/>
+
+    </ui:define>
+
+
+</ui:composition>
+

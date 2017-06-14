@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"                
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/templates/modeloSistema.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="menu">
+
+        <ui:include src="/includes/menu.xhtml" />
+
+    </ui:define>
+
+
+
+
+
+    <ui:define name="conteudo">
+        
+        
+        <!-- TABELA DE RELATORIO -->
+        <h:form>
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"  />
+            <p:dataTable var="tabelaRelatorio" value="#{operacoesLimoeiroBean.list}" editable="true" id="tblRelatorio" style="center" paginator="true" rows="20"  >
+                <p:ajax event="rowEdit" listener="#{operacoesLimoeiroBean.onRowEdit}" />
+                <p:column filterBy="#{tabelaRelatorio.data}" headerText="Data" style="center" filterMatchMode="contains" >
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaRelatorio.data}">
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </h:outputText>
+                        </f:facet>
+                        <f:facet name="input" id="editData">
+                            <p:calendar  value="#{tabelaRelatorio.data}" style="width:100%" pattern="dd/MM/yyyy HH:mm:ss"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{tabelaRelatorio.veiculo}" headerText="Veiculo"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaRelatorio.veiculo}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaRelatorio.veiculo}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Combustivel / LTS" >
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaRelatorio.combustivel}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText  value="#{tabelaRelatorio.combustivel}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Horimetro Anterior" >
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaRelatorio.horimetroAnterior}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText  value="#{tabelaRelatorio.horimetroAnterior}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Horimetro Atual" >
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaRelatorio.horimetroAtual}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText  value="#{tabelaRelatorio.horimetroAtual}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Horimetro Percorrido" >
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaRelatorio.horimetroPercorrido}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText  value="#{tabelaRelatorio.horimetroPercorrido}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Consumo" >
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaRelatorio.consumo}" >
+                                <f:convertNumber pattern="#0.00" />
+                            </h:outputText>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText id="editConsumo" value="#{tabelaRelatorio.consumo}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{tabelaRelatorio.nota}" headerText="Nota" filterMatchMode="contains" >
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaRelatorio.nota}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText  id="editNota" value="#{tabelaRelatorio.nota}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column  exportable="false" width="20">
+                    
+                    <p:rowEditor  editTitle="Editar" cancelTitle="Cancelar" saveTitle="Salvar" />
+                </p:column>
+                <p:column exportable="false" width="25">
+                    
+                        <p:commandButton style="width:30px;height: 30px;" value="" icon="ui-icon-trash" action="#{operacoesLimoeiroBean.excluirOperacao(tabelaRelatorio)}" update="tblRelatorio" >
+                        <p:confirm header="Confirmacao" message="Tem certeza? Esta operacao nao pode ser desfeita" icon="ui-icon-alert"  />
+                        </p:commandButton>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="Nao" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>             
+                </p:column>
+            </p:dataTable>
+            <h:commandLink>
+                <img src="../resources/images/pdf.png" alt=""/>
+                <p:dataExporter type="pdf" target="tblRelatorio" fileName="Relatorio"  options="#{operacoesLimoeiroBean.pdfOpt}" preProcessor="#{operacoesLimoeiroBean.preProcessPDF}"/>
+            </h:commandLink>
+        </h:form>
+        <!-- FIM DA TABELA DE RELATORIO -->
+        
+        
+        
+        <p:dialog header="Nova operacao de abastecimento" widgetVar="dlgNovaOperacao" modal="true" appendTo="@(body)">
+
+            <h:form id="formNovaOperacao">
+                <p:messages id="mensagemNovaOperacao" showDetail="true" autoUpdate="true" closable="true"  />
+                <p:panelGrid columns="2" >
+
+                    <h:outputText value="Veiculo: " />
+                    <h:selectOneMenu id="txtVeiculo" value="#{operacoesLimoeiroBean.novaOperacaoLimoeiro.veiculo}">
+                        <f:selectItems value="#{veiculosLimoeiroBean.gerarListaVeiculos()}" var="user" itemLabel="#{user.placa}" itemValue="#{user.placa}" />
+                    </h:selectOneMenu>
+
+
+                    <p:outputLabel for="event" value="Data:" />
+                    <p:calendar id="event" pattern="MM/dd/yyyy HH:mm:ss">
+                        <p:ajax event="dateSelect" listener="#{operacoesLimoeiroBean.onDateSelect}" />
+                    </p:calendar>
+
+
+                    <h:outputText value="Horimetro:  "  />
+                    <h:inputText  id="txtHorimetro" />
+
+                    <h:outputText value="Combustivel: " />
+                    <h:inputText  id="txtCombustivel" />
+
+                    <h:outputText value="Quilometragem: " />
+                    <p:selectBooleanCheckbox id="cb">
+                        <p:ajax listener="#{operacoesLimoeiroBean.checkboxChanged}"/>
+                    </p:selectBooleanCheckbox>
+
+                    <h:outputText value="Valor do abastecimento: " />
+                    <h:inputText  id="txtValorCombustivel"  />
+
+                    <h:outputText value="Nota fiscal: " />
+                    <h:inputText  id="txtNota"  value="Sem nota" />
+
+                    <h:outputText value="" />
+
+
+
+
+                    <p:commandButton action="#{operacoesLimoeiroBean.testarNovaOperacao()}" value="Enviar!" ajax="false"  >  
+                        <p:resetInput target="formNovaOperacao" />
+                    </p:commandButton>
+                </p:panelGrid>
+            </h:form>
+
+        </p:dialog>
+        
+        
+        
+        
+        
+
+        
+    </ui:define>
+
+
+
+    <ui:define name="left">
+        
+        <p:commandButton action="veiculos_limoeiro.xhtml?faces-redirect=true" value="Inicio / Relatorio" style="width:200px;"/>
+        <p:commandButton value="Nova operacao" onclick="PF('dlgNovaOperacao').show();" style="width:200px;"/>
+        <p:commandButton action="gerenciarVeiculos_limoeiro.xhtml?faces-redirect=true" value="Gerenciar veiculos" style="width:200px;"/>
+        <p:commandButton action="tanque_limoeiro.xhtml?faces-redirect=true" value="Gerenciar tanque" style="width:200px;"/>
+
+
+
+    </ui:define>
+
+
+</ui:composition>
+

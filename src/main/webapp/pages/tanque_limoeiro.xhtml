@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"                
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/templates/modeloSistema.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="menu">
+
+        <ui:include src="/includes/menu.xhtml" />
+
+    </ui:define>
+
+
+
+
+
+    <ui:define name="conteudo">
+        
+        
+        <!-- TABELA DE RELATORIO -->
+        <h:form>
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"  />
+            <p:dataTable var="tabelaRelatorio" value="#{operacoesTanqueBean.gerarListaOperacoes()}" id="tblRelatorio" style="center" paginator="true" rows="20"  >
+                <p:column filterBy="#{tabelaRelatorio.data}" headerText="Data" style="center" filterMatchMode="contains" >
+                    <h:outputText value="#{tabelaRelatorio.data}" style="center" />
+                </p:column>
+                <p:column headerText="Entrada / LTS" >
+                    <h:outputText value="#{tabelaRelatorio.entrada}"  style="center"/>
+                </p:column>
+                <p:column headerText="Sida / LTS" >
+                    <h:outputText value="#{tabelaRelatorio.saida}"  style="center"/>
+                </p:column>
+                <p:column headerText="Quantidade Anterior" >
+                    <h:outputText value="#{tabelaRelatorio.quantidadeAnterior}"  style="center"/>
+                </p:column>
+                <p:column headerText="Quantidade Atual" >
+                    <h:outputText value="#{tabelaRelatorio.quantidadeAtual}"  style="center"/>
+                </p:column>
+                <p:column filterBy="#{tabelaRelatorio.veiculo}" headerText="Veiculo"  filterMatchMode="contains">
+                    <h:outputText value="#{tabelaRelatorio.veiculo}" style="center"/>
+                </p:column>
+
+                <p:column headerText="Valor" >
+                    <h:outputText value="#{tabelaRelatorio.valor}" >
+                        <f:convertNumber pattern="#0.00" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Opcoes" exportable="false">
+                    <p:commandButton value="Apagar" action="#{operacoesTanqueBean.excluirOperacao(tabelaRelatorio)}" update="tblRelatorio" >
+                        <p:confirm header="Confirmacao" message="Tem certeza? Esta operacao nao pode ser desfeita" icon="ui-icon-alert"  />
+                    </p:commandButton>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="Nao" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>                       
+                </p:column>
+            </p:dataTable>
+            <h:commandLink>
+                <img src="../resources/images/pdf.png" alt=""/>
+                <p:dataExporter type="pdf" target="tblRelatorio" fileName="Relatorio"  options="#{operacoesTanqueBean.pdfOpt}" preProcessor="#{operacoesTanqueBean.preProcessPDF}"/>
+            </h:commandLink>
+        </h:form>
+        <!-- FIM DA TABELA DE RELATORIO -->
+        
+        
+        
+        <p:dialog header="Nova operacao de entrada" widgetVar="dlgNovaOperacao" modal="true" appendTo="@(body)">
+
+            <h:form id="formNovaOperacao">
+                <p:messages id="mensagemNovaOperacao" showDetail="true" autoUpdate="true" closable="true"  />
+                <p:panelGrid columns="2" >
+
+
+                    <p:outputLabel for="event" value="Data:" />
+                    <p:calendar id="event" pattern="MM/dd/yyyy HH:mm:ss">
+                        <p:ajax event="dateSelect" listener="#{operacoesTanqueBean.onDateSelect}" />
+                    </p:calendar>
+
+                    <h:outputText value="Entrada:  "  />
+                    <h:inputText  id="txtEntrada" />
+
+                    <h:outputText value="Valor do abastecimento: " />
+                    <h:inputText  id="txtValorCombustivel"  />
+
+                    <h:outputText value="Nota fiscal: " />
+                    <h:inputText  id="txtNota"  value="Sem nota" />
+
+                    <h:outputText value="" />
+
+
+
+
+                    <p:commandButton action="#{operacoesTanqueBean.testarNovaOperacao()}" value="Enviar!" ajax="false"  >  
+                        <p:resetInput target="formNovaOperacao" />
+                    </p:commandButton>
+                </p:panelGrid>
+            </h:form>
+
+        </p:dialog>
+        
+        
+        
+        
+        
+
+        
+    </ui:define>
+
+
+
+    <ui:define name="left">
+        
+        <p:commandButton action="veiculos_limoeiro.xhtml?faces-redirect=true" value="Inicio / Relatorio" style="width:200px;"/>
+        <p:commandButton value="Entrada de combustivel" onclick="PF('dlgNovaOperacao').show();" style="width:200px;"/>
+
+
+
+    </ui:define>
+
+
+</ui:composition>
+

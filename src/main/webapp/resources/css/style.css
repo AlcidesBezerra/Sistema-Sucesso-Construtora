@@ -1,0 +1,17 @@
+@CHARSET "ISO-8859-1";
+
+.ui-layout-north {
+	z-index: 20 !important;
+	overflow: visible !important;;
+}
+
+.ui-layout-north .ui-layout-unit-content {
+	overflow: visible !important;
+}
+
+.centered {
+position:relative;
+height: 100px;
+margin:0 auto;
+padding:0 auto;
+}

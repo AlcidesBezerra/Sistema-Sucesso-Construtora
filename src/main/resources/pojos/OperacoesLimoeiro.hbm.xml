@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 09/06/2017 22:31:28 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="pojos.OperacoesLimoeiro" table="operacoes_limoeiro" catalog="almoxarife" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="veiculo" type="string">
+            <column name="veiculo" length="32" not-null="true" />
+        </property>
+        <property name="data" type="timestamp">
+            <column name="data" length="19" not-null="true" />
+        </property>
+        <property name="combustivel" type="double">
+            <column name="combustivel" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="horimetroAnterior" type="double">
+            <column name="horimetro_anterior" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="horimetroAtual" type="double">
+            <column name="horimetro_atual" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="horimetroPercorrido" type="double">
+            <column name="horimetro_percorrido" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="consumo" type="double">
+            <column name="consumo" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="nota" type="string">
+            <column name="nota" length="42" not-null="true" />
+        </property>
+        <property name="valorPendente" type="double">
+            <column name="valor_pendente" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="isPendente" type="int">
+            <column name="is_pendente" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

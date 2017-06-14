@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      >
+    <h:head>
+        <h:outputStylesheet library="css" name="style.css" />
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+        <title>Sistema Sucesso</title>
+    </h:head>
+    <h:body>
+
+        <p:layout fullPage="true">
+
+            <p:layoutUnit position="north" resizable="true" closable="true" collapsible="true">
+                <ui:insert name="menu"/>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="south" size="100" header="Rodapé" resizable="true" collapsible="true">
+                <ui:insert name="rodape">
+                    <p:clock pattern="HH:mm:ss dd.MM.yyyy" mode="server" />
+                    <div align="right"><h:outputText value="Desenvolvido por Alcides Bezerra" style="font-size: 9px;" /></div>
+                </ui:insert>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="west" size="210" header="Menu" resizable="true"  collapsible="true">
+                <ui:insert name="left"/>
+            </p:layoutUnit>
+
+            <!-- <p:layoutUnit position="east" size="210" header="Menu" resizable="true" closable="true" collapsible="true" effect="drop">
+                <ui:insert name="right"/>
+            </p:layoutUnit> -->
+
+            <p:layoutUnit position="center">
+                <ui:insert name="conteudo"/>
+            </p:layoutUnit>
+
+        </p:layout>
+
+
+    </h:body>
+</html>
