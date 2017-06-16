@@ -13,13 +13,13 @@
 
     </ui:define>
 
-    <ui:define name="conteudo">    
+    <ui:define name="conteudo">   
+
+
 
         <p:dialog header="Inserir novo produto" widgetVar="dlgInserirProduto" modal="true" appendTo="@(body)">
-
             <p:panelGrid columns="2" >
                 <h:form>
-
                     <p:messages id="mensagemInserirProduto" showDetail="true" autoUpdate="true" closable="true"  />
                     <p:panelGrid columns="2">
                         <h:outputText value="Nome do produto: " />
@@ -104,6 +104,21 @@
                     </p:cellEditor>
                 </p:column>
 
+                <p:column headerText="Alertar"  filterMatchMode="contains">
+                    <p:selectBooleanCheckbox value="#{tabelaProdutos.alerta}">
+                        <p:ajax listener="#{produtosBean.checkBoxAlertaListener(tabelaProdutos)}" update="@form" process="@this" />
+                    </p:selectBooleanCheckbox>
+                </p:column>
+                
+                <p:column headerText="Quantidade Alerta"  filterMatchMode="contains">
+                    <p:panelGrid columns="2" style="border: 0px">
+                    <p:inputText value="#{tabelaProdutos.quantidadeAlerta}">
+                        <p:ajax listener="#{produtosBean.onValueChanged(tabelaProdutos)}" />
+                    </p:inputText>
+                    <p:commandButton value="Atualizar" />
+                    </p:panelGrid>
+                </p:column>
+
                 <p:column  exportable="false" width="20">       
                     <p:rowEditor  editTitle="Editar" cancelTitle="Cancelar" saveTitle="Salvar" />
                 </p:column>
@@ -124,6 +139,7 @@
     </ui:define>
 
     <ui:define name="left">
+        <p:commandButton action="ferramentas_almoxarife.xhtml?faces-redirect=true" value="Ferramentas" style="width:200px;"/>
         <p:commandButton value="Cadastrar Produto" onclick="PF('dlgInserirProduto').show();" style="width:200px;"/>
         <p:commandButton value="Entrada/Saida" onclick="PF('dlgEntradaProduto').show();" style="width:200px;"/>
         <p:commandButton action="relatorio_almoxarife.xhtml?faces-redirect=true" value="Relatorio" style="width:200px;"/>

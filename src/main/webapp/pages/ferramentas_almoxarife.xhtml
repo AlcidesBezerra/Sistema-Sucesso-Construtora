@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/templates/modeloSistema.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="menu">
+
+        <ui:include src="/includes/menu.xhtml" />
+
+    </ui:define>
+
+    <ui:define name="conteudo">    
+
+        <p:dialog header="Inserir nova ferramenta" widgetVar="dlgInserirFerramenta" modal="true" appendTo="@(body)">
+            <p:panelGrid columns="2" >
+                <h:form>
+                    <p:messages id="mensagemInserirFerramenta" showDetail="true" autoUpdate="true" closable="true"  />
+                    <p:panelGrid columns="2">
+                        <h:outputText value="Nome da ferramenta: " />
+                        <h:inputText  value="#{ferramentasBean.novaFerramenta.ferramenta}" />
+                        <h:outputText value="   " />
+                        <p:commandButton value="Cadastrar!" action="#{ferramentasBean.inserirFerramenta(ferramentasBean.novaFerramenta)}" ajax="true" oncomplete="setTimeout(function(){$('[id$=mensagemInserirFerramenta]').fadeOut()},'2500'), setTimeout(function(){$('[id$=messages]').fadeOut()},'0')" />
+                    </p:panelGrid>
+                </h:form>
+            </p:panelGrid>
+        </p:dialog>
+
+        <p:dialog header="Nova movimentacao" widgetVar="dlgMovimentacao" modal="true" appendTo="@(body)">
+            <p:panelGrid columns="2" >
+                <h:form>
+                    <p:messages id="mensagemInserirMovimentacao" showDetail="true" autoUpdate="true" closable="true"  />
+                    <p:panelGrid columns="2">
+                        <h:outputText value="Codigo da ferramenta: " />
+                        <h:inputText  value="#{ferramentasBean.codigoFerramenta}" />
+
+                        <h:outputText value="Data: " />
+                        <p:calendar id="event" pattern="dd/MM/yyyy HH:mm:ss" value="#{ferramentasBean.novaOperacaoFerramentas.data}">
+                        </p:calendar>
+
+                        <h:outputText value="Retirada: " />
+                        <p:selectBooleanCheckbox value="#{ferramentasBean.novaOperacaoFerramentas.retirada}">
+                        </p:selectBooleanCheckbox>
+                        
+                        <h:outputText value="Devolucao " />
+                        <p:selectBooleanCheckbox >
+                        </p:selectBooleanCheckbox>
+                        
+                        <h:outputText value="Usuario: " />
+                        <p:inputText value="#{ferramentasBean.novaOperacaoFerramentas.usuario}">
+                        </p:inputText>
+                        
+                        <h:outputText value="Observacao: " />
+                        <p:inputText value="#{ferramentasBean.novaOperacaoFerramentas.obs}">
+                        </p:inputText>
+
+                        <h:outputText value="   " />
+                        <p:commandButton value="Cadastrar!" action="#{ferramentasBean.inserirOperacao()}" ajax="true" oncomplete="setTimeout(function(){$('[id$=mensagemInserirFerramenta]').fadeOut()},'2500'), setTimeout(function(){$('[id$=messages]').fadeOut()},'0')" />
+                    </p:panelGrid>
+                </h:form>
+            </p:panelGrid>
+        </p:dialog>
+
+
+
+
+
+
+        <h:form id="formTabelaFerramentas">
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"  />
+            <p:dataTable var="tabelaFerramentas" value="#{ferramentasBean.gerarListaDeProdutos()}" id="tblFerramentas" style="center" paginator="true" rows="20" editable="true"  >
+                <p:ajax event="rowEdit" listener="#{ferramentasBean.onRowEdit}" />
+                <p:column filterBy="#{tabelaFerramentas.id}" headerText="Codigo"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaFerramentas.id}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaFerramentas.id}"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{tabelaFerramentas.ferramenta}" headerText="Ferramenta"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaFerramentas.ferramenta}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaFerramentas.ferramenta}"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{tabelaFerramentas.situacao}" headerText="Situacao"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaFerramentas.situacao}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaFerramentas.situacao}"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{tabelaFerramentas.usuario}" headerText="Usuario atual"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaFerramentas.usuario}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaFerramentas.usuario}"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column  exportable="false" width="20">       
+                    <p:rowEditor  editTitle="Editar" cancelTitle="Cancelar" saveTitle="Salvar" />
+                </p:column>
+
+                <p:column exportable="false" width="25">
+
+                    <p:commandButton style="width:30px;height: 30px;" value="" icon="ui-icon-trash" action="#{ferramentasBean.excluirFerramenta(tabelaFerramentas)}" update="@form" ajax="true" process="@this">
+                        <p:confirm header="Confirmacao" message="Tem certeza? Esta operacao nao pode ser desfeita" icon="ui-icon-alert"  />
+                    </p:commandButton>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="Nao" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>             
+                </p:column>
+            </p:dataTable>
+        </h:form>
+        <!-- FIM DA TABELA DE RELATORIO -->
+
+    </ui:define>
+
+    <ui:define name="left">
+        <p:commandButton value="Cadastrar Ferramenta" onclick="PF('dlgInserirFerramenta').show();" style="width:200px;"/>
+        <p:commandButton value="Entrada/Saida" onclick="PF('dlgMovimentacao').show();" style="width:200px;"/>
+        <p:commandButton action="relatorio_ferramentas.xhtml?faces-redirect=true" value="Relatorio" style="width:200px;"/>
+        <p:commandButton action="almoxarife.xhtml?faces-redirect=true" value="Voltar" style="width:200px;"/>
+    </ui:define>
+
+
+</ui:composition>
+

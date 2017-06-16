@@ -14,11 +14,61 @@
     </ui:define>
 
     <ui:define name="conteudo">
-        
-        
-    <div id="cont_790f1a16735b9045d9ae79498963407d" align="center"><script type="text/javascript" src="https://www.tempo.pt/wid_loader/790f1a16735b9045d9ae79498963407d"></script></div>    
-       
-    
+
+
+        <h:form id="formTabelaProdutosAlerta">
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"  />
+
+            <p:dataTable var="tabelaProdutosAlerta" value="#{produtosBean.gerarListaAlerta()}" id="tblProdutosAlerta" style="center" paginator="true" rows="20" editable="true"  >
+                <p:ajax event="rowEdit" listener="#{produtosBean.onRowEdit}" />
+                <f:facet name="header">
+                    PRODUTOS COM BAIXA QUANTIDADE
+                </f:facet>
+
+                <p:column filterBy="#{tabelaProdutosAlerta.id}" headerText="Codigo"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaProdutosAlerta.id}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaProdutosAlerta.id}"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{tabelaProdutosAlerta.nomeProduto}" headerText="Produto"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaProdutosAlerta.nomeProduto}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaProdutosAlerta.nomeProduto}"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{tabelaProdutosAlerta.quantidadeProduto}" headerText="Quantidade em estoque"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaProdutosAlerta.quantidadeProduto}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaProdutosAlerta.quantidadeProduto}"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{tabelaProdutosAlerta.quantidadeAlerta}" headerText="Quantidade de Alerta"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaProdutosAlerta.quantidadeAlerta}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaProdutosAlerta.quantidadeAlerta}"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+            </p:dataTable>
+        </h:form>    
+
+
 
     </ui:define>
 

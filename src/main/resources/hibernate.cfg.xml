@@ -41,18 +41,17 @@ Contributor(s):
 -->
 <hibernate-configuration>
     <session-factory>
-        <property name="show_sql">true</property> 
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/almoxarife?zeroDateTimeBehavior=convertToNull</property>
         <property name="hibernate.connection.username">root</property>
+        <mapping resource="pojos/Ferramentas.hbm.xml"/>
         <mapping resource="pojos/OperacoesEscritorio.hbm.xml"/>
         <mapping resource="pojos/OperacoesAlmoxarife.hbm.xml"/>
         <mapping resource="pojos/OperacoesTanque.hbm.xml"/>
-        <mapping resource="pojos/EmprestimoAlmoxarife.hbm.xml"/>
         <mapping resource="pojos/VeiculosLimoeiro.hbm.xml"/>
         <mapping resource="pojos/Produtos.hbm.xml"/>
-        <mapping resource="pojos/Funcionarios.hbm.xml"/>
+        <mapping resource="pojos/OperacoesFerramentas.hbm.xml"/>
         <mapping resource="pojos/Veiculos.hbm.xml"/>
         <mapping resource="pojos/OperacoesLimoeiro.hbm.xml"/>
     </session-factory>

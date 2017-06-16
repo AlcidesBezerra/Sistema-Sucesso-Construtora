@@ -6,15 +6,11 @@
 package beans;
 
 import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -26,7 +22,6 @@ import org.hibernate.Session;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 import pojos.OperacoesAlmoxarife;
-import pojos.OperacoesEscritorio;
 import pojos.Produtos;
 import util.HibernateUtil;
 
@@ -50,6 +45,9 @@ public class ProdutosBean {
     private double saida = 0;
     private Date data = new Date();
 
+    private boolean alerta;
+    private double quantidadeAlerta;
+
     @PostConstruct
     public void init() {
         gerarListaDeProdutos();
@@ -61,15 +59,13 @@ public class ProdutosBean {
         novaOperacaoAlmoxarife.setProduto(getProduto(codigoEntrada));
         novaOperacaoAlmoxarife.setQuantidadeAnterior(getLastQuantidade(codigoEntrada));
         novaOperacaoAlmoxarife.setQuantidadeAtual(novaOperacaoAlmoxarife.getQuantidadeAnterior() + novaOperacaoAlmoxarife.getEntrada() - novaOperacaoAlmoxarife.getSaida());
-        System.out.println("Antes de inserir no banco: " + novaOperacaoAlmoxarife);
         try {
             ses = hu.getSessionFactory().openSession();
             ses.beginTransaction();
             ses.save(novaOperacaoAlmoxarife);
             ses.getTransaction().commit();
             ses.close();
-            System.out.println("DEPOIS de inserir no banco: " + novaOperacaoAlmoxarife);
-            
+
             try {
                 ses = hu.getSessionFactory().openSession();
                 ses.getTransaction().begin();
@@ -117,28 +113,23 @@ public class ProdutosBean {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String dataString = format.format(event.getObject());
-
         this.data = format.parse(dataString);
         novaOperacaoAlmoxarife.setData(this.data);
-        System.out.println(novaOperacaoAlmoxarife);
 
     }
 
     public List<Produtos> atualizarLista() {
-        System.out.println("MÉTODO ATUALIZACAO ESCRITORIO");
         ses = hu.getSessionFactory().openSession();
         ses.beginTransaction();
         Query qu = ses.createQuery("from " + Produtos.class.getName());
         list = qu.list();
         ses.getTransaction().commit();
         ses.close();
-
         return list;
     }
 
     public List<Produtos> gerarListaDeProdutos() {
         if (list == null) {
-            System.out.println("Método acionado de gerar lista");
             list = new ArrayList<>();
             ses = hu.getSessionFactory().openSession();
             ses.beginTransaction();
@@ -148,6 +139,19 @@ public class ProdutosBean {
             ses.close();
         }
         return list;
+    }
+    
+    public List<Produtos> gerarListaAlerta() {
+        List<Produtos> lista;
+            lista = new ArrayList<>();
+            ses = hu.getSessionFactory().openSession();
+            ses.beginTransaction();
+            Query qu = ses.createQuery("from Produtos WHERE alerta = true AND quantidade_produto <= quantidade_alerta");
+            lista = qu.list();
+            ses.getTransaction().commit();
+            ses.close();
+        
+        return lista;
     }
 
     public void excluirProduto(Produtos produto) {
@@ -163,12 +167,10 @@ public class ProdutosBean {
 
     public void selecionarProduto(Produtos produto) {
         produtoSelecionado = produto;
-        System.out.println(produtoSelecionado.toString());
     }
 
     public void onRowEdit(RowEditEvent event) throws ValidatorException {
         Produtos novoProduto = (Produtos) event.getObject();
-        System.out.println("ID DO PRODUTO A SER ATUALIZADOI: " + novoProduto.getId());
 
         ses = hu.getSessionFactory().openSession();
         ses.beginTransaction();
@@ -187,10 +189,10 @@ public class ProdutosBean {
             ses.close();
             atualizarLista();
             FacesContext context = FacesContext.getCurrentInstance();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "O veiculo foi cadastrado."));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "O produto foi cadastrado com sucesso."));
         } catch (HibernateException e) {
             FacesContext context = FacesContext.getCurrentInstance();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Erro!", "Cheque sua conexão ou contacte o administrador."));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro!", "Cheque sua conexão ou contacte o administrador."));
         }
 
     }
@@ -205,9 +207,33 @@ public class ProdutosBean {
         horimetro = (double) qu.uniqueResult();
         ses.getTransaction().commit();
         ses.close();
-        System.out.println(horimetro);
         return horimetro;
 
+    }
+
+    public void checkBoxAlertaListener(Produtos produto) {
+        ses = hu.getSessionFactory().openSession();
+        ses.beginTransaction();
+        ses.update(produto);
+        ses.getTransaction().commit();
+        ses.close();
+        if (produto.getAlerta()) {
+            FacesContext context = FacesContext.getCurrentInstance();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "O item esta marcado para alerta."));
+        } else {
+            FacesContext context = FacesContext.getCurrentInstance();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Sucesso", "O item esta desmarcado para alerta."));
+        }
+    }
+
+    public void onValueChanged(Produtos produto) {
+        ses = hu.getSessionFactory().openSession();
+        ses.beginTransaction();
+        ses.update(produto);
+        ses.getTransaction().commit();
+        ses.close();
+        FacesContext context = FacesContext.getCurrentInstance();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "O numero para alerta foi definido"));
     }
 
     /**
@@ -254,6 +280,22 @@ public class ProdutosBean {
 
     public void setCodigoEntrada(int codigoEntrada) {
         this.codigoEntrada = codigoEntrada;
+    }
+
+    public boolean isAlerta() {
+        return alerta;
+    }
+
+    public void setAlerta(boolean alerta) {
+        this.alerta = alerta;
+    }
+
+    public double getQuantidadeAlerta() {
+        return quantidadeAlerta;
+    }
+
+    public void setQuantidadeAlerta(double quantidadeAlerta) {
+        this.quantidadeAlerta = quantidadeAlerta;
     }
 
 }

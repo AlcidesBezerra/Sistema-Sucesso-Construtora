@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/templates/modeloSistema.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="menu">
+
+        <ui:include src="/includes/menu.xhtml" />
+
+    </ui:define>
+
+    <ui:define name="conteudo">
+
+
+        <h:form id="formTabelaOperacoesFerramentas">
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"  />
+
+            <p:dataTable var="tabelaOperacoesFerramentas" value="#{ferramentasBean.gerarListaDeOperacoesFerramentas()}" id="tabelaOperacoesFerramentas" style="center" paginator="true" rows="20" editable="true"  >
+                <p:ajax event="rowEdit" listener="#{ferramentasBean.onRowEdit}" />
+
+                <p:column filterBy="#{tabelaOperacoesFerramentas.data}" headerText="Data"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaOperacoesFerramentas.data}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaOperacoesFerramentas.data}"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{tabelaOperacoesFerramentas.ferramenta}" headerText="Ferramenta"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaOperacoesFerramentas.ferramenta}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaOperacoesFerramentas.ferramenta}"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{tabelaOperacoesFerramentas.retirada}" headerText="Retirada"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <p:selectBooleanCheckbox value="#{tabelaOperacoesFerramentas.retirada}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                             <p:selectBooleanCheckbox value="#{tabelaOperacoesFerramentas.retirada}" />
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{tabelaOperacoesFerramentas.devolucao}" headerText="Devolucao"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <p:selectBooleanCheckbox value="#{tabelaOperacoesFerramentas.devolucao}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                             <p:selectBooleanCheckbox value="#{tabelaOperacoesFerramentas.devolucao}" />
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{tabelaOperacoesFerramentas.usuario}" headerText="Usuario"  filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{tabelaOperacoesFerramentas.usuario}" />
+                        </f:facet>
+                        <f:facet name="input" >
+                            <p:inputText value="#{tabelaOperacoesFerramentas.usuario}"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column exportable="false" width="25">
+                <p:commandButton style="width:30px;height: 30px;" value="" icon="ui-icon-trash" action="#{ferramentasBean.excluirOperacaoFerramenta(tabelaOperacoesFerramentas)}" update="@form" ajax="true" process="@this">
+                        <p:confirm header="Confirmacao" message="Tem certeza? Esta operacao nao pode ser desfeita" icon="ui-icon-alert"  />
+                    </p:commandButton>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="Nao" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>  
+                </p:column>
+            </p:dataTable>
+        </h:form>    
+
+
+
+    </ui:define>
+
+
+    <ui:define name="left">
+        <p:commandButton action="ferramentas_almoxarife.xhtml?faces-redirect=true" value="Voltar" style="width:200px;"/>
+    </ui:define>
+</ui:composition>
+

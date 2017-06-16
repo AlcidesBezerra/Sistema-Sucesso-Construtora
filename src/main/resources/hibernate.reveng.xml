@@ -41,13 +41,14 @@ Contributor(s):
 -->
 <hibernate-reverse-engineering>
   <schema-selection match-catalog="almoxarife"/>
-  <table-filter match-name="veiculos"/>
-  <table-filter match-name="operacoes_limoeiro"/>
-  <table-filter match-name="emprestimo_almoxarife"/>
-  <table-filter match-name="operacoes_almoxarife"/>
   <table-filter match-name="funcionarios"/>
-  <table-filter match-name="veiculos_limoeiro"/>
-  <table-filter match-name="operacoes_tanque"/>
   <table-filter match-name="operacoes_escritorio"/>
+  <table-filter match-name="operacoes_tanque"/>
+  <table-filter match-name="operacoes_limoeiro"/>
+  <table-filter match-name="ferramentas"/>
   <table-filter match-name="produtos"/>
+  <table-filter match-name="veiculos"/>
+  <table-filter match-name="veiculos_limoeiro"/>
+  <table-filter match-name="operacoes_ferramentas"/>
+  <table-filter match-name="operacoes_almoxarife"/>
 </hibernate-reverse-engineering>
